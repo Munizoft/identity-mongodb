@@ -1,4 +1,5 @@
 ﻿using Munizoft.Identity.Infrastructure.Models;
+using Munizoft.Identity.Resources;
 using Munizoft.Identity.Resources.Role;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,13 @@ namespace Munizoft.Identity.Infrastructure.Services
         /// <param name="request"></param>
         /// <returns></returns>
         Task<ServiceResult<RoleResource>> CreateAsync(RoleCreateRequestResource request);
+
+        /// <summary>
+        ///     Gey Role By Id
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<ServiceResult<RoleResource>> GetByIdAsync(GetByIdRequest<Guid> request);
 
         /// <summary>
         ///     List Roles

@@ -5,8 +5,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Munizoft.Identity.Entities;
 using Munizoft.Identity.Infrastructure.Extensions;
+using Munizoft.Identity.Infrastructure.Helpers;
 using Munizoft.Identity.Infrastructure.Models;
 using Munizoft.Identity.Persistence.MongoDB;
+using Munizoft.Identity.Resources;
 using Munizoft.Identity.Resources.Role;
 using System;
 using System.Collections.Generic;
@@ -17,8 +19,11 @@ namespace Munizoft.Identity.Infrastructure.Services
 {
     public class RoleService : BaseService<RoleService>, IRoleService
     {
+        #region Fields
         private readonly MongoRoleStore<Role, IdentityContext> _roleStore;
+        #endregion Fields
 
+        #region Constructor
         public RoleService(
             ILogger<RoleService> logger,
             IMapper mapper,
@@ -28,6 +33,7 @@ namespace Munizoft.Identity.Infrastructure.Services
         {
             _roleStore = new MongoRoleStore<Role, IdentityContext>(context, new IdentityErrorDescriber());
         }
+        #endregion Constructor
 
         /// <summary>
         ///     Create Role
@@ -58,6 +64,32 @@ namespace Munizoft.Identity.Infrastructure.Services
                 }
 
                 return ServiceResult<RoleResource>.Fail(result.Errors.ToServiceError());
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<RoleResource>.Fail(ex.ToServiceError());
+            }
+        }
+
+        /// <summary>
+        ///     Gey Role By Id
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<ServiceResult<RoleResource>> GetByIdAsync(GetByIdRequest<Guid> request)
+        {
+            try
+            {
+                var role = await _roleStore.FindByIdAsync(request.Id.ToString());
+
+                if (role == null)
+                {
+                    return ServiceResult<RoleResource>.Fail(MessagesHelpers.ROLE_NOT_FOUND.ToServiceError());
+                }
+
+                var resource = _mapper.Map<Role, RoleResource>(role);
+
+                return ServiceResult<RoleResource>.OK(resource);
             }
             catch (Exception ex)
             {

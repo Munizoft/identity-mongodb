@@ -23,8 +23,12 @@ namespace Munizoft.Identity.Infrastructure.Services
 {
     public class AuthService : BaseService<AuthService>, IAuthService
     {
+        #region Fields
         private readonly MongoUserManager<User, Role, IdentityContext> _userManager;
         private readonly IOptions<Models.JwtOptions> _jwtOptions;
+        #endregion Fields
+
+        #region Constructor
         public AuthService(
             ILogger<AuthService> logger,
             IMapper mapper,
@@ -77,6 +81,7 @@ namespace Munizoft.Identity.Infrastructure.Services
 
             _userManager = new MongoUserManager<User, Role, IdentityContext>(context, store, options, passwordHasher, userValidators, passwordValidators, keyNormalizer, errorDescriber, services, userManagerLogger);
         }
+        #endregion Constructor
 
         /// <summary>
         ///     Login

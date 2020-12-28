@@ -12,12 +12,26 @@ namespace Munizoft.Identity.Infrastructure.Mappings
         public IdentityProfile()
         {
             #region Attribute
+            this.CreateMap<Attribute, AttributeResource>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Key, opt => opt.MapFrom(src => src.Key))
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
+                .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Value))
+                ;
+
+            this.CreateMap<AttributeResource, Attribute>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Key, opt => opt.MapFrom(src => src.Key))
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
+                .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Value))
+                ;
+
             this.CreateMap<AttributeCreateRequestResource, Attribute>()
-             .ForMember(dest => dest.Id, opt => opt.Ignore())
-             .ForMember(dest => dest.Key, opt => opt.MapFrom(src => src.Key))
-             .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
-             .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Value))             
-             ;
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Key, opt => opt.MapFrom(src => src.Key))
+                .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
+                .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src.Value))
+                ;
             #endregion Attribute
 
             #region Account
