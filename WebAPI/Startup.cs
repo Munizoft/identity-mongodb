@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using MongoDbGenericRepository;
 using Munizoft.Identity.Entities;
 using Munizoft.Identity.Infrastructure.Models;
@@ -20,6 +21,7 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Munizoft.Identity.MongoDB.Extensions;
 
 namespace Munizoft.Identity.MongoDB
 {
@@ -35,11 +37,6 @@ namespace Munizoft.Identity.MongoDB
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //var mongoDbContext = new IdentityContext("mongodb+srv://admin:dWlVBTLDBfZVY6Rs@cluster0.b0chh.mongodb.net", "Identity");
-            //services.AddIdentity<User, Role>()
-            //    .AddMongoDbStores<User, Role, String>(mongoDbContext)
-            //    .AddDefaultTokenProviders();
-
             var mongoDbIdentityConfiguration = new MongoDbIdentityConfiguration
             {
                 MongoDbSettings = new MongoDbSettings
@@ -66,11 +63,13 @@ namespace Munizoft.Identity.MongoDB
                 }
             };
 
+            services.InitCORS(Configuration);
+
             services.ConfigureMongoDbIdentity<User, Role, String>(mongoDbIdentityConfiguration);
 
-            services.AddOptions<Munizoft.Identity.Infrastructure.Models.IdentityOptions>();
+            services.AddOptions<Infrastructure.Models.IdentityOptions>();
 
-            services.Configure<Munizoft.Identity.Infrastructure.Models.JwtOptions>(options =>
+            services.Configure<JwtOptions>(options =>
             {
                 options.Key = Configuration["Jwt:Key"];
                 options.Issuer = Configuration["Jwt:Issuer"];
@@ -127,10 +126,11 @@ namespace Munizoft.Identity.MongoDB
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 });
 
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Munizoft - Identity MongoDB", Version = "v1" });
-            //});
+            services
+                .AddSwaggerGen(options =>
+                {
+                    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Sole - Merchant", Version = "v1" });
+                });
 
             services.AddControllers();
         }
@@ -143,12 +143,25 @@ namespace Munizoft.Identity.MongoDB
                 app.UseDeveloperExceptionPage();
             }
 
+            app.EnableCORS(Configuration);
+
+            app.UseSwagger();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            if (env.IsDevelopment() || env.IsStaging() || env.IsProduction())
+            {
+                app.UseSwaggerUI(c =>
+                {
+                    c.RoutePrefix = "";
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sole - Merchant");
+                });
+            }
 
             app.UseEndpoints(endpoints =>
             {
