@@ -10,8 +10,11 @@ namespace Munizoft.Identity.MongoDB.Controllers
 {
     public class AuthController : BaseController<AuthController>
     {
+        #region Fields
         private readonly IAuthService _authService;
+        #endregion Fields
 
+        #region Constructor
         public AuthController(
             ILogger<AuthController> logger,
             IAuthService authService
@@ -20,8 +23,9 @@ namespace Munizoft.Identity.MongoDB.Controllers
         {
             _authService = authService;
         }
+        #endregion Constructor
 
-        [HttpPost("login")]
+        [HttpPost("Login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginRequestResource request)
         {
@@ -42,7 +46,7 @@ namespace Munizoft.Identity.MongoDB.Controllers
             }
         }
 
-        [HttpPost("logout")]
+        [HttpPost("Logout")]
         [Authorize(Policy = "RequireAnyRole")]
         public async Task<IActionResult> Logout()
         {

@@ -23,7 +23,7 @@ namespace Munizoft.Identity.MongoDB.Controllers
             _accountService = accountService;
         }
 
-        [HttpPost("register")]
+        [HttpPost("Register")]
         [AllowAnonymous]
         public async Task<object> Register(RegisterRequestResource request)
         {
@@ -121,7 +121,7 @@ namespace Munizoft.Identity.MongoDB.Controllers
             }
         }
 
-        [HttpPost("setpassword")]
+        [HttpPost("SetPassword")]
         [AllowAnonymous]
         public async Task<object> SetPassword(SetPasswordRequestResource request)
         {
@@ -146,7 +146,7 @@ namespace Munizoft.Identity.MongoDB.Controllers
             }
         }
 
-        [HttpGet("me")]
+        [HttpGet("Me")]
         [Authorize(Policy = "RequireAnyRole")]
         public async Task<Object> Me()
         {
@@ -172,7 +172,7 @@ namespace Munizoft.Identity.MongoDB.Controllers
             }
         }
 
-        [HttpPut("me")]
+        [HttpPut("Me")]
         [Authorize(Policy = "RequireAnyRole")]
         public async Task<Object> EditMe(EditAccountRequestResource request)
         {

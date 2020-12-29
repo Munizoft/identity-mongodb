@@ -14,6 +14,7 @@ using Munizoft.Identity.Infrastructure.Validations.Auth;
 using Munizoft.Identity.Persistence.MongoDB;
 using Munizoft.Identity.Resources.Auth;
 using Munizoft.Identity.Validations.Extensions;
+using Munizoft.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

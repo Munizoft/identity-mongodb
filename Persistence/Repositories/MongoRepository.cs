@@ -1,6 +1,6 @@
 ﻿namespace Munizoft.Identity.Persistence.MongoDB.Repositories
 {
-    public interface ICosmosDBRepository<TDocument>
+    public class MongoRepository<TDocument> : IMongoRepository<TDocument>
     {
     }
 }

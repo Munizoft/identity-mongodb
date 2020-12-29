@@ -13,6 +13,7 @@ using Munizoft.Identity.Resources;
 using Munizoft.Identity.Resources.Common;
 using Munizoft.Identity.Resources.User;
 using Munizoft.Identity.Validations.Extensions;
+using Munizoft.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

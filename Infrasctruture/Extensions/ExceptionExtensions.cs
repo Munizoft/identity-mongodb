@@ -1,6 +1,7 @@
 ﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 using Munizoft.Identity.Infrastructure.Models;
+using Munizoft.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 

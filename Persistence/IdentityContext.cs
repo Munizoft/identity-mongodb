@@ -6,7 +6,6 @@ namespace Munizoft.Identity.Persistence.MongoDB
 {
     public class IdentityContext : MongoDbContext
     {
-
         public IdentityContext(IMongoDatabase mongoDatabase)
             : base(mongoDatabase)
         {

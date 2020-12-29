@@ -1,7 +1,3 @@
-using AspNetCore.Identity.Mongo;
-using AspNetCore.Identity.Mongo.Model;
-using AspNetCore.Identity.MongoDbCore.Extensions;
-using AspNetCore.Identity.MongoDbCore.Infrastructure;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -12,16 +8,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MongoDbGenericRepository;
-using Munizoft.Identity.Entities;
 using Munizoft.Identity.Infrastructure.Models;
 using Munizoft.Identity.Infrastructure.Services;
-using Munizoft.Identity.Persistence.MongoDB;
+using Munizoft.Identity.MongoDB.Extensions;
 using Newtonsoft.Json.Serialization;
+using Sole.Services;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using Munizoft.Identity.MongoDB.Extensions;
 
 namespace Munizoft.Identity.MongoDB
 {
@@ -37,37 +31,9 @@ namespace Munizoft.Identity.MongoDB
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var mongoDbIdentityConfiguration = new MongoDbIdentityConfiguration
-            {
-                MongoDbSettings = new MongoDbSettings
-                {
-                    ConnectionString = "mongodb+srv://admin:dWlVBTLDBfZVY6Rs@cluster0.b0chh.mongodb.net",
-                    DatabaseName = "Identity"
-                },
-
-                IdentityOptionsAction = options =>
-                {
-                    options.Password.RequireDigit = false;
-                    options.Password.RequiredLength = 8;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequireLowercase = false;
-
-                    // Lockout settings
-                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                    options.Lockout.MaxFailedAccessAttempts = 10;
-
-                    // ApplicationUser settings
-                    options.User.RequireUniqueEmail = true;
-                    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@.-_";
-                }
-            };
+            services.InitIdentity(Configuration);
 
             services.InitCORS(Configuration);
-
-            services.ConfigureMongoDbIdentity<User, Role, String>(mongoDbIdentityConfiguration);
-
-            services.AddOptions<Infrastructure.Models.IdentityOptions>();
 
             services.Configure<JwtOptions>(options =>
             {
@@ -111,13 +77,9 @@ namespace Munizoft.Identity.MongoDB
                 //options.AddPolicy("RequireAnyRole", policy => policy.RequireRole("Super Admin", "Admin", "User"));
             });
 
-            services.AddSingleton<IdentityContext>(x => new IdentityContext("mongodb+srv://admin:dWlVBTLDBfZVY6Rs@cluster0.b0chh.mongodb.net", "Identity"));
-            services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IRoleService, RoleService>();
+            services.InitSole(Configuration);
 
-            services.AddAutoMapper(typeof(UserService));
+            services.AddAutoMapper(typeof(UserService), typeof(ClientService));
 
             services
                 .AddControllers()
@@ -129,7 +91,7 @@ namespace Munizoft.Identity.MongoDB
             services
                 .AddSwaggerGen(options =>
                 {
-                    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Sole - Merchant", Version = "v1" });
+                    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Sole - Identity", Version = "v1" });
                 });
 
             services.AddControllers();
@@ -141,6 +103,13 @@ namespace Munizoft.Identity.MongoDB
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
             }
 
             app.EnableCORS(Configuration);
@@ -159,7 +128,7 @@ namespace Munizoft.Identity.MongoDB
                 app.UseSwaggerUI(c =>
                 {
                     c.RoutePrefix = "";
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sole - Merchant");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sole - Identity");
                 });
             }
 

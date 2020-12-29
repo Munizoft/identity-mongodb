@@ -1,6 +1,7 @@
 ﻿using Munizoft.Identity.Infrastructure.Models;
 using Munizoft.Identity.Resources.Account;
 using Munizoft.Identity.Resources.User;
+using Munizoft.Infrastructure.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

@@ -2,6 +2,7 @@
 using Munizoft.Identity.Resources;
 using Munizoft.Identity.Resources.Common;
 using Munizoft.Identity.Resources.User;
+using Munizoft.Infrastructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
