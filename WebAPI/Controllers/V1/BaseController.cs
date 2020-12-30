@@ -93,5 +93,15 @@ namespace Munizoft.Identity.MongoDB.Controllers
         {
             _logger = logger;
         }
+
+        protected ObjectResult GenericError(Exception ex)
+        {
+            return Problem(ex.Message);
+        }
+
+        protected ObjectResult GenericError(String error)
+        {
+            return Problem(error);
+        }
     }
 }

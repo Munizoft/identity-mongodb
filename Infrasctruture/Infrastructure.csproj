@@ -19,11 +19,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Extensions\" />
     <Folder Include="Validators\" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Sole\Sole-WebAPI\Infrastructure\Sole.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Sole\Sole-Framework\Sole.Core\Sole.Core.csproj" />
     <ProjectReference Include="..\Entities\Entities.csproj" />
     <ProjectReference Include="..\Persistence\Persistence.csproj" />
     <ProjectReference Include="..\Resources\Resources.csproj" />

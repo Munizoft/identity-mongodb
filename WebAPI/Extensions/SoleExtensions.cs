@@ -20,7 +20,7 @@ namespace Munizoft.Identity.MongoDB.Extensions
                 throw new ArgumentNullException(nameof(configuration));
             }
 
-            services.AddSingleton<ISoleContext, SoleContext>(x => new SoleContext(configuration["DBConntectionString:SoleConnection"], configuration["DBConntectionString:SoleDatabase"]));
+            services.AddSingleton<SoleContext>(x => new SoleContext(configuration["DBConntectionString:SoleConnection"], configuration["DBConntectionString:SoleDatabase"]));
 
             services.AddScoped<IClientService, ClientService>();
         }

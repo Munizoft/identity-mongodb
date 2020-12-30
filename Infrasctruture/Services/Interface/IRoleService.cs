@@ -1,7 +1,6 @@
-﻿using Munizoft.Identity.Infrastructure.Models;
-using Munizoft.Identity.Resources;
+﻿using Munizoft.Identity.Resources;
 using Munizoft.Identity.Resources.Role;
-using Munizoft.Infrastructure.Models;
+using Sole.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Munizoft.Identity.Infrastructure.Helpers;
 using Munizoft.Identity.Infrastructure.Services;
 using Munizoft.Identity.Resources;
 using Munizoft.Identity.Resources.Account;
@@ -12,8 +11,11 @@ namespace Munizoft.Identity.MongoDB.Controllers
 {
     public class AccountController : BaseController<AccountController>
     {
+        #region Fields
         private readonly IAccountService _accountService;
+        #endregion Fields
 
+        #region Constructor
         public AccountController(
             ILogger<AccountController> logger,
             IAccountService accountService
@@ -22,10 +24,11 @@ namespace Munizoft.Identity.MongoDB.Controllers
         {
             _accountService = accountService;
         }
+        #endregion Constructor
 
         [HttpPost("Register")]
         [AllowAnonymous]
-        public async Task<object> Register(RegisterRequestResource request)
+        public async Task<IActionResult> Register(RegisterRequestResource request)
         {
             try
             {
@@ -35,22 +38,18 @@ namespace Munizoft.Identity.MongoDB.Controllers
                 {
                     return Ok(result.Data);
                 }
-                else if (!result.Succeeded)
-                {
-                    return BadRequest(result.Errors);
-                }
 
-                return new ApplicationException(MessagesHelpers.UNKNOWN_ERROR);
+                return BadRequest(result.Errors);
             }
             catch (Exception ex)
             {
-                return new ApplicationException(MessagesHelpers.UNKNOWN_ERROR);
+                return GenericError(ex);
             }
         }
 
         [HttpPost("ForgotPassword")]
         [AllowAnonymous]
-        public async Task<object> ForgotPassword(ForgotPasswordRequestResource request)
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordRequestResource request)
         {
             try
             {
@@ -60,22 +59,18 @@ namespace Munizoft.Identity.MongoDB.Controllers
                 {
                     return Ok(result.Data);
                 }
-                else if (!result.Succeeded)
-                {
-                    return BadRequest(result);
-                }
 
-                return new ApplicationException(MessagesHelpers.UNKNOWN_ERROR);
+                return BadRequest(result.Errors);
             }
             catch (Exception ex)
             {
-                return new ApplicationException(MessagesHelpers.UNKNOWN_ERROR);
+                return GenericError(ex);
             }
         }
 
         [HttpPost("Confirm")]
         [AllowAnonymous]
-        public async Task<object> Confirm(ConfirmAccountRequestResource request)
+        public async Task<IActionResult> Confirm(ConfirmAccountRequestResource request)
         {
             try
             {
@@ -84,22 +79,18 @@ namespace Munizoft.Identity.MongoDB.Controllers
                 {
                     return Ok(result.Data);
                 }
-                else if (!result.Succeeded)
-                {
-                    return BadRequest(result);
-                }
 
-                return new ApplicationException(MessagesHelpers.UNKNOWN_ERROR);
+                return BadRequest(result.Errors);
             }
             catch (Exception ex)
             {
-                return new ApplicationException(MessagesHelpers.UNKNOWN_ERROR);
+                return GenericError(ex);
             }
         }
 
         [HttpPost("ChangePassword")]
         [Authorize(Policy = "RequireAnyRole")]
-        public async Task<object> ChangePassword(ChangePasswordRequestResource request)
+        public async Task<IActionResult> ChangePassword(ChangePasswordRequestResource request)
         {
             try
             {
@@ -110,20 +101,18 @@ namespace Munizoft.Identity.MongoDB.Controllers
                 {
                     return Ok(result.Data);
                 }
-                else
-                {
-                    return BadRequest(result);
-                }
+
+                return BadRequest(result.Errors);
             }
             catch (Exception ex)
             {
-                return new ApplicationException(MessagesHelpers.UNKNOWN_ERROR);
+                return GenericError(ex);
             }
         }
 
         [HttpPost("SetPassword")]
         [AllowAnonymous]
-        public async Task<object> SetPassword(SetPasswordRequestResource request)
+        public async Task<IActionResult> SetPassword(SetPasswordRequestResource request)
         {
             try
             {
@@ -133,48 +122,35 @@ namespace Munizoft.Identity.MongoDB.Controllers
                 {
                     return Ok(result.Data);
                 }
-                else if (!result.Succeeded)
-                {
-                    return BadRequest(result);
-                }
 
-                return new ApplicationException(MessagesHelpers.UNKNOWN_ERROR);
+                return BadRequest(result.Errors);
             }
             catch (Exception ex)
             {
-                return new ApplicationException(MessagesHelpers.UNKNOWN_ERROR);
+                return GenericError(ex);
             }
         }
 
         [HttpGet("Me")]
         [Authorize(Policy = "RequireAnyRole")]
-        public async Task<Object> Me()
+        public async Task<IActionResult> Me()
         {
             try
             {
                 var request = new GetByIdRequest<Guid>(this.UserId);
 
-                //var serviceResult = await this._accountService.GetUserByIdAsync(request);
-
-                //if (serviceResult.Succeeded)
-                //{
-                //    if (serviceResult.Data == null)
-                //        return NotFound();
-
-                //    return Ok(serviceResult);
-                //}
 
                 return BadRequest();
             }
             catch (Exception ex)
             {
-                return new ApplicationException(MessagesHelpers.UNKNOWN_ERROR);
+                return GenericError(ex);
             }
         }
 
         [HttpPut("Me")]
         [Authorize(Policy = "RequireAnyRole")]
-        public async Task<Object> EditMe(EditAccountRequestResource request)
+        public async Task<IActionResult> EditMe(EditAccountRequestResource request)
         {
             try
             {
@@ -184,21 +160,14 @@ namespace Munizoft.Identity.MongoDB.Controllers
 
                 if (result.Succeeded)
                 {
-                    if (result.Data == null)
-                        return NotFound();
-
                     return Ok(result.Data);
                 }
-                else if (!result.Succeeded)
-                {
-                    return BadRequest(result);
-                }
 
-                return new ApplicationException(MessagesHelpers.UNKNOWN_ERROR);
+                return BadRequest(result.Errors);
             }
             catch (Exception ex)
             {
-                return new ApplicationException(MessagesHelpers.UNKNOWN_ERROR);
+                return GenericError(ex);
             }
         }
     }

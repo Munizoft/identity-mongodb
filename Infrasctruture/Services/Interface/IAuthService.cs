@@ -1,6 +1,5 @@
-﻿using Munizoft.Identity.Infrastructure.Models;
-using Munizoft.Identity.Resources.Auth;
-using Munizoft.Infrastructure.Models;
+﻿using Munizoft.Identity.Resources.Auth;
+using Sole.Core.Models;
 using System.Threading.Tasks;
 
 namespace Munizoft.Identity.Infrastructure.Services
